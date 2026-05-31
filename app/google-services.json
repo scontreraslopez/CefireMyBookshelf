@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "595617708714",
+    "project_id": "cefire-mybookshelf",
+    "storage_bucket": "cefire-mybookshelf.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:595617708714:android:cd7743002d8a84f276aed3",
+        "android_client_info": {
+          "package_name": "com.davant.cefiremybookshelf"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyANpkM6AUDIkE-cvWi_2n36kri9n45JOrk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

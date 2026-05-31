@@ -1,31 +1,37 @@
 package com.davant.cefiremybookshelf.screens.home
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.davant.cefiremybookshelf.domain.model.Book
 import com.davant.cefiremybookshelf.domain.repository.BooksRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
-class HomeViewModel(private val repository: BooksRepository): ViewModel() {
-    private val _bookListFull = MutableLiveData<List<Book>>()
+class HomeViewModel(
+    private val repository: BooksRepository,
+    val userName: String,
+    private val userId: String,
+    val goToAddEditScreen: (Book) -> Unit,
+    val goBack: () -> Unit
+) : ViewModel() {
 
-    private val _bookList = MutableLiveData<List<Book>>()
-    val bookList:LiveData<List<Book>> = _bookList
+    private val _contentIndex = MutableStateFlow(0)
+    val contentIndex: StateFlow<Int> = _contentIndex
 
-    private val _contentIndex = MutableLiveData<Int>()
-    val contentIndex:LiveData<Int> = _contentIndex
+    val bookList: StateFlow<List<Book>> = repository.getBooks(userId)
+        .combine(_contentIndex) { books, index ->
+            filterBookList(books, index)
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyList()
+        )
 
-    init {
-        _bookListFull.value = repository.getAllBooks()
-        _bookList.value = _bookListFull.value?.let { filterBookList(it, 0) }
-    }
-
-    fun onContentIndexChange(index:Int){
+    fun onContentIndexChange(index: Int) {
         _contentIndex.value = index
-        _bookList.value = _bookListFull.value?.let { filterBookList(it, index) }
-    }
-
-    fun getAllBooks(){
-        _bookListFull.value = repository.getAllBooks()
     }
 }

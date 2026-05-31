@@ -1,7 +1,9 @@
 package com.davant.cefiremybookshelf.screens.home
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,55 +29,76 @@ import com.davant.cefiremybookshelf.domain.model.Book
 
 
 @Composable
-fun HomeContent(innerPadding: PaddingValues, booksFiltered:List<Book>) {
+fun HomeContent(innerPadding: PaddingValues, booksFiltered: List<Book>, navigateToEdit: (Book) -> Unit) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         contentPadding = innerPadding
-        ) {
+    ) {
         items(booksFiltered) { book ->
-            BookCard(book)
+            BookCard(book) { navigateToEdit(it) }
         }
     }
 }
 
 @SuppressLint("LocalContextResourcesRead", "DiscouragedApi")
 @Composable
-fun BookCard(book:Book) {
+fun BookCard(book: Book, navigateToEdit: (Book) -> Unit) {
     val context = LocalContext.current
     val resId = rememberSaveable(book.cover) {
         context.resources.getIdentifier(book.cover, "drawable", context.packageName)
     }
-    Card(modifier = Modifier
-        .padding(8.dp)
+    Card(
+        modifier = Modifier
+            .padding(8.dp)
+            .clickable(onClick = { navigateToEdit(book) })
     ) {
-        Image(painter = painterResource(resId),
-            contentDescription = "Cover of ${book.title}")
-        Text(modifier = Modifier
-            .padding(top = 8.dp, start = 6.dp),
+        if (resId != 0)
+            Image(
+                painter = painterResource(resId),
+                contentDescription = "Cover of ${book.title}"
+            )
+        Text(
+            modifier = Modifier
+                .padding(top = 8.dp, start = 6.dp),
             text = book.title,
-            fontWeight = FontWeight.Bold)
-        Text(modifier = Modifier
-            .padding(8.dp),
+            fontWeight = FontWeight.Bold
+        )
+        Text(
+            modifier = Modifier
+                .padding(8.dp),
             text = book.author,
-            fontStyle = FontStyle.Italic)
-        Text(modifier = Modifier
-            .padding(4.dp),
+            fontStyle = FontStyle.Italic
+        )
+        Text(
+            modifier = Modifier
+                .padding(4.dp),
             text = book.isbn,
-            fontSize = 14.sp)
+            fontSize = 14.sp
+        )
         Row(modifier = Modifier.fillMaxWidth()) {
-            Icon(painter = painterResource(if(book.read) R.drawable.ic_read
-            else R.drawable.ic_not_read),
+            Icon(
+                painter = painterResource(
+                    if (book.read) R.drawable.ic_read
+                    else R.drawable.ic_not_read
+                ),
                 contentDescription = "Read or not",
-                modifier = Modifier.padding(6.dp))
-            Icon(painter = painterResource(if(book.fav) R.drawable.ic_fav
-            else R.drawable.ic_not_fav),
+                modifier = Modifier.padding(6.dp)
+            )
+            Icon(
+                painter = painterResource(
+                    if (book.fav) R.drawable.ic_fav
+                    else R.drawable.ic_not_fav
+                ),
                 contentDescription = "Favourite or not",
-                modifier = Modifier.padding(6.dp))
-            Text(modifier = Modifier
-                .padding(6.dp)
-                .fillMaxWidth(),
+                modifier = Modifier.padding(6.dp)
+            )
+            Text(
+                modifier = Modifier
+                    .padding(6.dp)
+                    .fillMaxWidth(),
                 text = "${book.year}",
-                textAlign = TextAlign.End)
+                textAlign = TextAlign.End
+            )
         }
     }
 }

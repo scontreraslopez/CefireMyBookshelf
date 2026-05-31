@@ -22,7 +22,7 @@ import com.davant.cefiremybookshelf.ui.theme.Secondary
 fun HomeTopBar(
     scrollBehavior: TopAppBarScrollBehavior,
     user: String,
-    onBack: () -> NavKey,
+    onBack: () -> Unit,
     goToEditScreen: () -> Unit
 ) {
     TopAppBar(
