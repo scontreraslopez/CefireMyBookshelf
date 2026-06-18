@@ -22,12 +22,13 @@ import com.davant.cefiremybookshelf.ui.theme.Secondary
 fun HomeTopBar(
     scrollBehavior: TopAppBarScrollBehavior,
     user: String,
+    books: Int,
     onBack: () -> Unit,
     goToEditScreen: () -> Unit
 ) {
     TopAppBar(
         title = {
-            Text("$user's Bookshelf",
+            Text("$user's Bookshelf [$books]",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.SemiBold)
         },

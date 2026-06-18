@@ -2,12 +2,14 @@ package com.davant.cefiremybookshelf.screens.home
 
 import android.annotation.SuppressLint
 import android.util.Log
+import android.util.Patterns
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -17,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
@@ -24,6 +27,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.davant.cefiremybookshelf.R
 import com.davant.cefiremybookshelf.domain.model.Book
 
@@ -44,18 +49,20 @@ fun HomeContent(innerPadding: PaddingValues, booksFiltered: List<Book>, navigate
 @Composable
 fun BookCard(book: Book, navigateToEdit: (Book) -> Unit) {
     val context = LocalContext.current
-    val resId = rememberSaveable(book.cover) {
-        context.resources.getIdentifier(book.cover, "drawable", context.packageName)
-    }
     Card(
         modifier = Modifier
             .padding(8.dp)
             .clickable(onClick = { navigateToEdit(book) })
     ) {
-        if (resId != 0)
-            Image(
-                painter = painterResource(resId),
-                contentDescription = "Cover of ${book.title}"
+        if(Patterns.WEB_URL.matcher(book.cover).matches())
+            AsyncImage(
+                model = ImageRequest.Builder(context)
+                    .data(book.cover)
+                    .crossfade(true)
+                    .build(),
+                contentDescription = "HP Character",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.width(200.dp)
             )
         Text(
             modifier = Modifier

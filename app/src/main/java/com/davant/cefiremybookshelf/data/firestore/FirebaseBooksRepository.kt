@@ -1,5 +1,6 @@
 package com.davant.cefiremybookshelf.data.firestore
 
+import android.util.Log
 import com.davant.cefiremybookshelf.domain.model.Book
 import com.davant.cefiremybookshelf.domain.repository.BooksRepository
 import com.google.firebase.firestore.FirebaseFirestore

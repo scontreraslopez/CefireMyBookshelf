@@ -39,13 +39,13 @@ class LoginViewModel(
         auth.createUserWithEmailAndPassword(
             _userName.value.toString(),
             _password.value.toString()
-        ).addOnCompleteListener {
+        ).addOnCompleteListener { result ->
             Log.i(
                 "Register button",
-                if (it.isSuccessful)
+                if (result.isSuccessful)
                     "User registered with ID: ${auth.currentUser?.uid}"
                 else
-                    "Registry failed ${it.exception.toString()}"
+                    "Registry failed ${result.exception.toString()}"
             )
         }
     }
@@ -64,5 +64,4 @@ class LoginViewModel(
             }
         }
     }
-
 }

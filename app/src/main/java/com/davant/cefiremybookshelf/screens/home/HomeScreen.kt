@@ -33,6 +33,7 @@ fun HomeScreen(
             HomeTopBar(
                 scrollBehavior = scrollBehavior,
                 user = getNameCleared(homeViewModel.userName),
+                books = bookList.size,
                 onBack = { homeViewModel.goBack() },
                 goToEditScreen = { homeViewModel.goToAddEditScreen(Book()) }
             )
@@ -42,7 +43,11 @@ fun HomeScreen(
                 homeViewModel.onContentIndexChange(it)
             }
         },
-        floatingActionButton = { HomeAddBookFAB(){ homeViewModel.goToAddEditScreen(Book()) } },
+        floatingActionButton = {
+            HomeAddBookFAB() {
+                homeViewModel.goToAddEditScreen(Book())
+            }
+        },
         floatingActionButtonPosition = FabPosition.Start
     ) { innerPadding ->
         HomeContent(innerPadding, bookList) {
